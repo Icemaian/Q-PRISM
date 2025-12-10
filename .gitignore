@@ -2,4 +2,5 @@
 *.mbtiles.gz
 venv/
 
-__pychache__
+*__pycache__/
+

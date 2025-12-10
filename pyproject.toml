@@ -1,0 +1,60 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "qprism"
+version = "0.1.0"
+description = "Q-PRISM: viewport-aware HTTP/3 scheduling experiments for vector tiles"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+  { name = "Isaac Craig" }
+]
+license = { text = "MIT" }
+
+# Runtime deps for the artifact (you can tweak versions as needed)
+dependencies = [
+  "pyyaml>=6.0",
+  "duckdb>=1.0.0",
+  "aioquic>=1.2.0",
+  "httpx[http2]>=0.27.0",
+  "streamlit>=1.38.0",
+  "pandas>=2.2.0",
+]
+
+# Extra stuff for development / thesis work
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+  "pytest-asyncio>=0.23.0",
+  "mypy>=1.10.0",
+  "types-PyYAML>=6.0.12",
+  "black>=24.0.0",
+  "isort>=5.13.0",
+	"hatch"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["qprism"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-q"
+testpaths = [
+  "tests",
+]
+python_files = "test_*.py"
+
+[tool.mypy]
+python_version = "3.11"
+packages = ["qprism"]
+strict = false
+ignore_missing_imports = true
+
+[tool.black]
+line-length = 88
+target-version = ["py313"]
+
+[tool.isort]
+profile = "black"
