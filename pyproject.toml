@@ -15,7 +15,7 @@ license = { text = "MIT" }
 
 
 [tool.hatch.build.targets.wheel]
-packages = ["src"]
+packages = ["src/qprism"]
 
 [tool.pytest.ini_options]
 addopts = "-q"
@@ -33,7 +33,7 @@ ignore_missing_imports = true
 
 [tool.black]
 line-length = 88
-target-version = ["py313"]
+target-version = ["py311"]
 
 [tool.isort]
 profile = "black"
