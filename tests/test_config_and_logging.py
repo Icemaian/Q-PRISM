@@ -6,7 +6,7 @@ from qprism.config import (
     load_base_config,
     load_experiment_config,
     BaseConfig,
-    ExpirmentConfig,
+    ExperimentConfig,
 )
 from qprism.logging_setup import configure_logging, get_logger
 
@@ -19,7 +19,7 @@ def test_load_yaml_base_has_expected_keys() -> None:
 def test_load_base_config_normalize_types() -> None:
     base = load_base_config()
     assert isinstance(base, BaseConfig)
-    assert isinstance(base.experiment_root, Path)
+    assert isinstance(base.expirement_root, Path)
     assert isinstance(base.duckdb_path, Path)
     assert base.viewport_sample_hz > 0
     assert 0.0 < base.viewport_complete_threshold <= 1.0
@@ -27,7 +27,7 @@ def test_load_base_config_normalize_types() -> None:
 
 def test_load_experiment_config_h2_default() -> None:
     cfg = load_experiment_config("config/experiments/http2_default.yaml")
-    assert isinstance(cfg, ExpirmentConfig)
+    assert isinstance(cfg, ExperimentConfig)
     assert cfg.name == "http2_default"
     assert cfg.scheduler_variant == "http2_default"
     assert cfg.netem_profile == "low_loss"

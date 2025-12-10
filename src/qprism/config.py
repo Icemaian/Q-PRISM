@@ -74,5 +74,5 @@ def load_base_config(path: str | Path ="configs/base.yaml") -> BaseConfig:
         stall_threshold_seconds=float(raw.get("stall_threshold_seconds", 0.25))
     )
     
-def load_expirement_config(path: str | Path) -> Dict[str, Any]:
+def load_experiment_config(path: str | Path) -> Dict[str, Any]:
     return load_yaml(path)
