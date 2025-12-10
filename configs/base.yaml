@@ -1,8 +1,0 @@
-expirement_root: data/results
-duckdb_path: data/results/duckdb/qprism_results.duckdb
-default_trace: data/trace/trace_city_center.json
-default_tile_source: data/tiles/_tiles.mbtiles
-viewport_sample_hz: 10
-viewport_complete_threshold: 0.95
-stall_threshold_seconds: 0.25
-

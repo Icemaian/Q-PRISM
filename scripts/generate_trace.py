@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-import gzip, shutil, urllib.request
+import gzip, shutil, urllib.request, os
 
 def linear_interpolation(a, b, t):
     return a + (b - a) * t
@@ -20,6 +20,7 @@ def fetch_country_tiles_files(country: str = "united_states_of_america") -> None
     urllib.request.urlretrieve(url, dst_gz)
     with gzip.open(dst_gz, "rb") as src, dst_gz.with_suffix("").open("wb") as dst:
         shutil.copyfileobj(src, dst)
+    os.remove(f"data/tiles/{country}.mbtiles.gz")
 
 def generate_trace(waypoints, zoom=14, seconds_between=3, fps=10):
     frames = []

@@ -1,7 +1,0 @@
-name: qprism_priority_only
-scheduler_variant: qprism_priority_only
-netem_profile: low_loss
-trace_path: data/traces/trace_city_center.json
-runs: 5
-seed_base: 42
-notes: "Q-PRISM priority only; cancellation disabled"

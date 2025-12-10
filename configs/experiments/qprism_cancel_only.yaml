@@ -1,7 +1,0 @@
-name: qprism_cancel_only
-scheduler_variant: qprism_cancel_only
-netem_profile: low_loss
-trace_path: data/traces/trace_city_center.json
-runs: 5
-seed_base: 42
-notes: "Agressive cancellation of irrelevant tiles; priorities left at default"

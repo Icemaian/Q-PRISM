@@ -1,7 +1,0 @@
-name: qprism_full
-scheduler_variant: qprism_full
-netem_profile: low_loss
-trace_path: data/traces/trace_city_center.json
-runs: 5
-seed_base: 42
-notes: "Fully implementated Q-PRISM, viewport rings mapped to H3 EPS plus aggressive cancellation of irrelevant tiles, with fairness gaur enabled"

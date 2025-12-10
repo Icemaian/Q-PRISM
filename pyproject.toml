@@ -26,8 +26,8 @@ dependencies = [
 # Extra stuff for development / thesis work
 [project.optional-dependencies]
 dev = [
-  "pytest>=8.0.0",
-  "pytest-asyncio>=0.23.0",
+  "pytest",
+  "pytest-asyncio",
   "mypy>=1.10.0",
   "types-PyYAML>=6.0.12",
   "black>=24.0.0",
@@ -39,7 +39,6 @@ dev = [
 packages = ["qprism"]
 
 [tool.pytest.ini_options]
-minversion = "8.0"
 addopts = "-q"
 testpaths = [
   "tests",
