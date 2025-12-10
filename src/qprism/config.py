@@ -6,7 +6,7 @@ import yaml
 
 @dataclass(slots=True)
 class BaseConfig:
-    expirement_root: Path
+    experiment_root: Path
     duckdb_path: Path
     default_trace: Path
     default_tile_source: Path
@@ -25,7 +25,9 @@ class ExperimentConfig:
     notes: Optional[str] = None
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "ExperimentConfig":
+    def from_dict(cls, data: Dict[str, Any], root_path: str = "") -> "ExperimentConfig":
+        if root_path == "":
+            root_path = Path(__file__).parent
         required = ["name", "scheduler_variant", "netem_profile", "trace_path"]
         missing = [k for k in required if k not in data]
         if missing:
@@ -34,7 +36,7 @@ class ExperimentConfig:
             name=str(data["name"]),
             scheduler_variant=str(data["scheduler_variant"]),
             netem_profile=str(data["netem_profile"]),
-            trace_path=Path(data["trace_path"]), 
+            trace_path=Path(root_path / data["trace_path"]), 
             runs=int(data.get("runs", 1)),
             seed_base=int(data.get("seed_base", 0)),
             notes=str(data["notes"]) if "notes" in data else None,
@@ -47,9 +49,11 @@ def load_yaml(path: str | Path) -> Dict[str, Any]:
     return data or {}
 
 def load_base_config(path: str | Path ="configs/base.yaml") -> BaseConfig:
+    if path == "configs/base.yaml":
+        path = Path(__file__).parent / path
     raw = load_yaml(path)
 
-    experiment_root = raw.get('expirment_root')
+    experiment_root = raw.get('experiment_root')
     if experiment_root is None:
         raise KeyError('Base config is missing/corrupted...')
 
@@ -65,7 +69,7 @@ def load_base_config(path: str | Path ="configs/base.yaml") -> BaseConfig:
         raise KeyError("Base config is missing default_tile_source")
 
     return BaseConfig(
-        expirement_root=Path(experiment_root),
+        experiment_root=Path(experiment_root),
         duckdb_path=Path(duckdb_path),
         default_trace=Path(default_trace),
         default_tile_source=Path(default_tile_source),
@@ -74,5 +78,5 @@ def load_base_config(path: str | Path ="configs/base.yaml") -> BaseConfig:
         stall_threshold_seconds=float(raw.get("stall_threshold_seconds", 0.25))
     )
     
-def load_experiment_config(path: str | Path) -> Dict[str, Any]:
-    return load_yaml(path)
+def load_experiment_config(path: str | Path) -> ExperimentConfig:
+    return ExperimentConfig.from_dict(load_yaml(path))
