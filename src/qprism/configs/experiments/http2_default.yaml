@@ -1,0 +1,7 @@
+name: http2_default
+scheduler_variant: http2_default
+netem_profile: low_loss
+trace_path: data/traces/trace_city_center.json
+runs: 5
+seed_base: 42
+notes: "H2 baseline using a single connection and server defaults"

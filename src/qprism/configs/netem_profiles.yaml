@@ -1,0 +1,25 @@
+profiles:
+  low_loss:
+    description: "Ideal wired network, low RTT, near-zero loss."
+    rtt_ms: 40
+    jitter_ms: 5
+    loss: 0.001
+
+  mid_loss:
+    description: "Average mobile network, moderate RTT, small but noticeable loss"
+    rtt_ms: 80
+    jitter_ms: 10
+    loss: 0.01
+
+  high_loss:
+    description: "Poor mobile network, congested network, higher RTT, bursty loss"
+    rtt_ms: 120
+    jitter_ms: 20
+    loss: 0.03
+
+  high_rtt:
+    description: "Terrible mobile network, highest RTT, modest loss"
+    rtt_ms: 240
+    jitter_ms: 40
+    loss: 0.005
+
