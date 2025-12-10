@@ -1,0 +1,5 @@
+*.mbtiles
+*.mbtiles.gz
+venv/
+
+__pychache__

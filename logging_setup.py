@@ -9,4 +9,4 @@ def configure_logging(config_path: str | Path = "configs/logging.yaml") -> None:
     config.dictConfig(cfg)
 
 def get_logger(name: str) -> Logger:
-    return logging.getlogger(name)
+    return getLogger(name)

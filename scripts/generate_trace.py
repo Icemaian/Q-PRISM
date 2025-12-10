@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+import gzip, shutil, urllib.request
 
 def linear_interpolation(a, b, t):
     return a + (b - a) * t
@@ -12,7 +13,15 @@ def interpolate_points(p0, p1, steps):
             linear_interpolation(p0[1], p1[1], t)
         )
 
-def generate_trace( waypoints, zoom=14, seconds_between=3, fps=10):
+def fetch_country_tiles_files(country: str = "united_states_of_america") -> None:
+    url = f"https://hot-qa-tiles-us-east-1.s3.amazonaws.com/latest.country/{country}.mbtiles.gz"
+    dst_gz = Path(f"data/tiles/{country}.mbtiles.gz")
+    dst_gz.parent.mkdir(parents=True, exist_ok=True)
+    urllib.request.urlretrieve(url, dst_gz)
+    with gzip.open(dst_gz, "rb") as src, dst_gz.with_suffix("").open("wb") as dst:
+        shutil.copyfileobj(src, dst)
+
+def generate_trace(waypoints, zoom=14, seconds_between=3, fps=10):
     frames = []
     ms_per_frame = int(1000 / fps)
     steps = seconds_between * fps
@@ -66,3 +75,5 @@ if __name__ == "__main__":
             fps=10,
         )
         save_trace(frames, f"data/traces/{trace['name']}.json")
+
+    fetch_country_tiles_files()
