@@ -13,28 +13,6 @@ authors = [
 ]
 license = { text = "MIT" }
 
-dependencies = [
-  "pyyaml>=6.0",
-  "duckdb>=1.0.0",
-  "aioquic>=1.2.0",
-  "httpx[http2]>=0.27.0",
-  "streamlit>=1.38.0",
-  "pandas>=2.2.0",
-]
-
-[project.optional-dependencies]
-dev = [
-  "pytest",
-  "pytest-asyncio",
-  "mypy>=1.10.0",
-  "types-PyYAML>=6.0.12",
-  "black>=24.0.0",
-  "isort>=5.13.0",
-	"hatch"
-]
-
-[tool.hatch.build]
-incldue = ["src"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src"]
@@ -59,3 +37,26 @@ target-version = ["py313"]
 
 [tool.isort]
 profile = "black"
+src_path = true
+
+dependencies = [
+  "pyyaml>=6.0",
+  "duckdb>=1.0.0",
+  "aioquic>=1.2.0",
+  "httpx[http2]>=0.27.0",
+  "streamlit>=1.38.0",
+  "pandas>=2.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-asyncio",
+  "mypy>=1.10.0",
+  "types-PyYAML>=6.0.12",
+  "black>=24.0.0",
+  "isort>=5.13.0",
+	"hatch"
+]
+
+
