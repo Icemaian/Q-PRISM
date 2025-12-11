@@ -19,13 +19,15 @@ def test_latlon_to_tile_and_wrapping():
     assert math.isclose(x1 % 1.0, 0.0, abs_tol=1e-6)
     assert math.isclose(x2 % 1.0, 0.0, abs_tol=1e-6)
     n = 2 ** zoom
-    assert math.floor(x1) % n == (math.floor(x2) % n)
+    tx1 = math.floor(x1) % n
+    tx2 = math.floor(x2) % n
+    assert tx1 == tx2
     #assert math.floor(x1) % (2**zoom) == math.floor(x2) % (2**zoom)
 
 def test_generate_requests_and_completeness(tmp_path):
     trace_points = [
             {"t_ms": 0, "lat": 0.0, "lon": 0.0, "zoom": 2},
-            {"t_ms": 2000, "lat": 0.0, "lon": 90.0, "zoom": 2}
+            {"t_ms": 2000, "lat": 0.0, "lon": 90.0, "zoom": 3}
     ]
     trace_path = tmp_path / "trace.json"
     trace_path.write_text(json.dumps(trace_points))
@@ -54,7 +56,7 @@ def test_generate_requests_and_completeness(tmp_path):
         ))
     comp_series = completeness.compute_completeness(loaded_trace, completions)
     comp_dict = {t: frac for t, frac in comp_series}
-    assert comp_dict.get(0,None) == 0.0
+    assert comp_dict.get(0, None) == 0.0
     assert math.isclose(comp_dict.get(1000, 0.0), 1.0, rel_tol= 1e-6)
     assert math.isclose(comp_dict.get(2000, 0.0), 0.0, rel_tol=1e-6)
     assert math.isclose(comp_dict.get(3000, 0.0), 1.0, rel_tol=1e-6)
