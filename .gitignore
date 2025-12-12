@@ -1,6 +1,7 @@
 *.mbtiles
 *.mbtiles.gz
 venv/
-
+*.pem
 *__pycache__/
+*dist/
 

@@ -1,3 +1,4 @@
+import os
 import json
 import subprocess
 from pathlib import Path
@@ -17,6 +18,9 @@ def interpolate_points(p0, p1, steps):
 def fetch_country_tiles_files(country: str = "united_states_of_america") -> None:
     url = f"https://hot-qa-tiles-us-east-1.s3.amazonaws.com/latest.country/{country}.mbtiles.gz"
     dst_gz = Path(__file__).parent.parent / Path(f"src/qprism/data/tiles/{country}.mbtiles.gz")
+    if os.path.isfile(dst_gz):
+        print("File already fetched, skipping")
+        return None
     dst_gz.parent.mkdir(parents=True, exist_ok=True)
     urllib.request.urlretrieve(url, dst_gz)
     with gzip.open(dst_gz, "rb") as src, dst_gz.with_suffix("").open("wb") as dst:
@@ -59,7 +63,8 @@ def setup_self_signed_certs():
             "openssl", "req", "-x509", "-newkey", "rsa:2048",
             "-keyout", str(key_path), "-out", str(cert_path),
             "-days", "365", "-nodes",
-            "-subj", "/CN=localhost"
+            "-subj", "/CN=localhost",
+            "-addext", "subjectAltName=DNS:localhost,IP:127.0.0.1",
         ], check=True)
 
 def save_trace(frames, path): 
