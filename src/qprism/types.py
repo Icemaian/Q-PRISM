@@ -2,6 +2,15 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Optional
 
+@dataclass(frozen=True)
+class Tile:
+    x: int
+    y: int
+    z: int
+
+    def __repr__(self):
+        return f"Tile({self.x}, {self.y}, z={self.z})"
+
 class Ring(int, Enum):
     R0 = 0
     R1 = 1

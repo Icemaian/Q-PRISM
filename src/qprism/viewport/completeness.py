@@ -59,7 +59,7 @@ def compute_completeness(trace: List[TracePoint], tile_completions: List[TileCom
                 tx_str, ty_str = tc.tile_id.split('_')
                 tx_i, ty_i = int(tx_str), int(ty_str)
             except ValueError:
-                tx_i = ty_i = None
+                continue
             tile_key = (tc.zoom, tx_i,ty_i)
             if tile_key in needed_tiles and not tc.cancelled:
                 loaded_tiles.add(tile_key)
@@ -72,6 +72,6 @@ def compute_completeness(trace: List[TracePoint], tile_completions: List[TileCom
                 frac = 1.0 if not needed_tiles else len(loaded_tiles) / len(needed_tiles)
                 completeness_series.append((tp_next.t_ms, frac))
         completeness_series.sort(key=lambda x: x[0])
-        return completeness_series
+    return completeness_series
         
 
