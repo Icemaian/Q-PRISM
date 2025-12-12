@@ -22,7 +22,9 @@ async def fetch_tile_qprism(server: str, port: int, tile_path: str, urgency: int
                 (b":authority", server.encode()),
                 (b"priority", priority_value.encode())
         ]
-        h3.send_headers(stream_id, headers)
+        h3.send_headers(stream_id, headers, end_stream=True)
+        for data, addr in quic.datagrams_to_send(now=quic._loop.time()):
+            client._transport.sendto(data, addr)
         #h3.send_data(stream_id, b"", end_stream=True)
         client.transmit()
         await client.wait_closed()

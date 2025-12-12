@@ -70,7 +70,7 @@ class QPRISMServerProtocol(QuicConnectionProtocol):
                 stream_id,
                 [
                     (b":status", b"200"),
-                    (b"content-type", b"application/x-protobu"),
+                    (b"content-type", b"application/x-protobuf"),
                     (b"cache-control", b"public, max-age=60"),
                 ]
             )
