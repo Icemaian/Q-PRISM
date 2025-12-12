@@ -4,6 +4,7 @@ from .H3_util import H3BaseClient, build_client_config, make_h3_headers
 
 async def fetch_tile_h3( server: str, port: int, tile_path: str, *, config: QuicConfiguration | None = None) -> bytes:
     cfg = config or build_client_config()
+    cfg.verify_mode = False
     headers = make_h3_headers(server, tile_path)
     proto_holder = []
 

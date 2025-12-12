@@ -10,6 +10,7 @@ def _priority_value(urgency: int, incremental: bool) -> bytes:
 
 async def fetch_tile_qprism( server: str, port: int, tile_path: str, *, urgency: int = 0, incremental: bool = False, config: QuicConfiguration | None = None ) -> bytes:
     cfg = config or build_client_config()
+    cfg.verify_mode = False
     extra = [(b"priority", _priority_value(urgency, incremental))]
     headers = make_h3_headers(server, tile_path, extra=extra)
     proto_holder: dict[str, H3BaseClient] = {}

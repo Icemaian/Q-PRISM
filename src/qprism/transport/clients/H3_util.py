@@ -5,6 +5,7 @@ from aioquic.asyncio.protocol import QuicConnectionProtocol
 from aioquic.h3.connection import H3Connection, H3_ALPN
 from aioquic.h3.events import DataReceived, HeadersReceived
 from aioquic.quic.configuration import QuicConfiguration
+from aioquic.quic.events import HandshakeCompleted
 
 Headers = List[Tuple[bytes, bytes]]
 
@@ -32,6 +33,7 @@ class H3BaseClient(QuicConnectionProtocol):
     def __init__(self, *args, request_headers: Headers, **kwargs):
         super().__init__(*args, **kwargs)
         self._h3 = H3Connection(self._quic)
+        self._request_sent: bool = False
         self._req_headers = request_headers
         self._done = asyncio.Event()
         self._body = bytearray()
@@ -42,9 +44,14 @@ class H3BaseClient(QuicConnectionProtocol):
         super().connection_made(transport)
         self._stream_id = self._quic.get_next_available_stream_id(is_unidirectional=False)
         self._h3.send_headers(self._stream_id, self._req_headers, end_stream=True)
-        self.transmit()
 
     def quic_event_received(self, event):
+        if isinstance(event, HandshakeCompleted) and not self._request_sent:
+            self._request_sent = True
+            self._stream_id = self._quic.get_next_available_stream_id(is_unidirectional=False)
+            self._h3.send_headers(self._stream_id, self._req_headers, end_stream=True)
+            self.transmit()
+
         for http_event in self._h3.handle_event(event):
             if isinstance(http_event, HeadersReceived):
                 for k, v in http_event.headers:

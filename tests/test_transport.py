@@ -96,8 +96,7 @@ async def test_h3_client_server_pair_smoke():
     cert, key = _cert_paths()
     print(cert, key)
     quic_cfg = QuicConfiguration(is_client=False, alpn_protocols=["h3"])
-    quic_cfg.verify_mode = False
-    #quic_cfg.load_cert_chain(str(cert), str(key))
+    quic_cfg.load_cert_chain(str(cert), str(key))
 
     protocol_factory = server_shim_init("H3", mbtiles_path=mbtiles)
 
