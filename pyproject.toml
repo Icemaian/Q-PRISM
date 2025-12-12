@@ -46,7 +46,10 @@ dependencies = [
   "httpx[http2]>=0.27.0",
   "streamlit>=1.38.0",
   "pandas>=2.2.0",
-	"mercantile"
+	"mercantile",
+	"httpx",
+	"aioquic",
+	"aiosqlite"
 ]
 
 [project.optional-dependencies]

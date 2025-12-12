@@ -1,4 +1,5 @@
 import json
+import subprocess
 from pathlib import Path
 import gzip, shutil, urllib.request, os
 
@@ -15,7 +16,7 @@ def interpolate_points(p0, p1, steps):
 
 def fetch_country_tiles_files(country: str = "united_states_of_america") -> None:
     url = f"https://hot-qa-tiles-us-east-1.s3.amazonaws.com/latest.country/{country}.mbtiles.gz"
-    dst_gz = Path(f"data/tiles/{country}.mbtiles.gz")
+    dst_gz = Path(__file__).parent.parent / Path(f"src/qprism/data/tiles/{country}.mbtiles.gz")
     dst_gz.parent.mkdir(parents=True, exist_ok=True)
     urllib.request.urlretrieve(url, dst_gz)
     with gzip.open(dst_gz, "rb") as src, dst_gz.with_suffix("").open("wb") as dst:
@@ -48,6 +49,19 @@ def generate_trace(waypoints, zoom=14, seconds_between=3, fps=10):
 
     return frames
 
+def setup_self_signed_certs():
+    cert_dir = Path(__file__).parent.parent / 'src/qprism/certs'
+    cert_path = cert_dir / "cert.pem"
+    key_path = cert_dir / "key.pem"
+
+    if not cert_path.exists() or not key_path.exists():
+        subprocess.run([
+            "openssl", "req", "-x509", "-newkey", "rsa:2048",
+            "-keyout", str(key_path), "-out", str(cert_path),
+            "-days", "365", "-nodes",
+            "-subj", "/CN=localhost"
+        ], check=True)
+
 def save_trace(frames, path): 
     Path(path).write_text(
             json.dumps({"frames": frames}, indent=2),
@@ -75,6 +89,10 @@ if __name__ == "__main__":
             seconds_between=3,
             fps=10,
         )
-        save_trace(frames, f"data/traces/{trace['name']}.json")
-
+        root_path = Path(__file__).parent.parent
+        save_trace(frames, f"{root_path}/src/qprism/data/traces/{trace['name']}.json")
+    print('Traces saved...')
+    setup_self_signed_certs()
+    print('Certs generated...')
     fetch_country_tiles_files()
+    print('Tiles pulled...')
