@@ -16,5 +16,5 @@ async def fetch_tile_h3( server: str, port: int, tile_path: str, *, config: Quic
     async with connect(server, port, configuration=cfg, create_protocol=create_protocol) as client:
         proto = proto_holder[0]
         body = await proto.wait_body()
-        await client.wait_closed()
+        client.close()
         return body

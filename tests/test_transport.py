@@ -108,6 +108,7 @@ async def test_h3_client_server_pair_smoke():
         assert len(body) > 0
     finally:
         server.close()
+        await asyncio.sleep(0.05)
 
 @pytest.mark.asyncio
 async def test_qprism_client_server_pair_smoke():
@@ -130,3 +131,4 @@ async def test_qprism_client_server_pair_smoke():
         assert len(body) > 0
     finally:
         server.close()
+        await asyncio.sleep(0.05)

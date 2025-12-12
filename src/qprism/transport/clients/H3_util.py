@@ -15,6 +15,7 @@ def project_root() -> Path:
 def build_client_config(cert_path: Optional[Path] = None) -> QuicConfiguration:
     root = project_root()
     cfg = QuicConfiguration(is_client=True, alpn_protocols=H3_ALPN)
+    print(root)
     cfg.load_verify_locations(str(cert_path or (root / "certs" / "cert.pem")))
     return cfg
 

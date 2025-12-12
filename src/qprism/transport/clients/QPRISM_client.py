@@ -23,5 +23,5 @@ async def fetch_tile_qprism( server: str, port: int, tile_path: str, *, urgency:
     async with connect(server, port, configuration=cfg, create_protocol=make_proto) as client:
         proto = proto_holder["p"]
         body = await proto.wait_body()
-        await client.wait_closed()
+        client.close()
         return body
