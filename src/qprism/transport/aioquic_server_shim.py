@@ -36,7 +36,9 @@ class QPRISMServerProtocol(QuicConnectionProtocol):
         tms_y = ( 1 << z) -1 - y
         db = await self.get_db()
         cursor = await db.execute("SELECT tile_data from tiles WHERE zoom_level=? AND tile_column=? AND tile_row=?", (z, x, tms_y))
+        
         row = await cursor.fetchone()
+        print(type(row))
         return row[0] if row else b""
 
     async def _handle_request(self, stream_id : int, headers: Headers) -> None:
@@ -69,7 +71,7 @@ class QPRISMServerProtocol(QuicConnectionProtocol):
                 [
                     (b":status", b"200"),
                     (b"content-type", b"application/x-protobu"),
-                    (b"cached-control", b"public, max-age=60"),
+                    (b"cache-control", b"public, max-age=60"),
                 ]
             )
 
@@ -84,7 +86,7 @@ class QPRISMServerProtocol(QuicConnectionProtocol):
         if isinstance(event, HeadersReceived):
             asyncio.create_task(self._handle_request(event.stream_id, event.headers))
 
-    def quic_event_recieved(self, event: QuicEvent) -> None:
+    def quic_event_received(self, event: QuicEvent) -> None:
         if isinstance(event, ProtocolNegotiated):
             if event.alpn_protocol.startswith("h3"):
                 self._http = H3Connection(self._quic)
@@ -103,12 +105,12 @@ async def run_server():
     config = QuicConfiguration(is_client=False, alpn_protocols=H3_ALPN)
     root_path = Path(__file__).parent.parent
     config.load_cert_chain(f"{root_path}/certs/cert.pem", f"{root_path}/certs/key.pem")
-    config.load_verify_locations(f"{root_path}/certs/cert.pem")
     await serve(
         "localhost", 4433,
         configuration = config,
         create_protocol = QPRISMServerProtocol
     )
+
 
 if __name__ == "__main__":
     asyncio.run(run_server())

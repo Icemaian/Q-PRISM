@@ -10,15 +10,20 @@ async def fetch_tile_qprism(server: str, port: int, tile_path: str, urgency: int
     async with connect(server, port, configuration=config) as client:
         quic = client._quic
         h3 = H3Connection(quic)
-        stream_id = quic.get_next_available_stream_id()
+        try:
+            stream_id = quic.get_next_available_stream_id(is_unidirectional=False)
+        except TypeError:
+            stream_id = quic.get_next_available_stream_id(False)
         priority_value = f"u={urgency}{' i' if incremental else ''}"
         headers = [
                 (b":method", b"GET"),
                 (b":path", tile_path.encode()),
-                (b"scheme:", b"https"),
+                (b":scheme", b"https"),
                 (b":authority", server.encode()),
                 (b"priority", priority_value.encode())
         ]
         h3.send_headers(stream_id, headers)
-        h3.send_data(stream_id, b"", end_stream=True)
+        #h3.send_data(stream_id, b"", end_stream=True)
+        client.transmit()
         await client.wait_closed()
+
